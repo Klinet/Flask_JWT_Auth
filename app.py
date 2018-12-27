@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required, current_identity
 from security import authenticate, identity
+import pymysql
 
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True  # To allow flask propagating exception even if debug is set to false on app
@@ -10,12 +11,53 @@ api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
 
+
+# connection = sqlite3.connect('db/users.db')
+#
+# cursor = connection.cursor()
+#
+# create_table = "CREATE TABLE users (id int, username text, password text, jwtoken text)"
+# cursor.execute(create_table)
+#
+# new_user = (1, 'Elek', 'teszt', 'token123')
+# insert_query = "insert into users values (?, ?, ?, ?)"
+# cursor.execute(insert_query, new_user)
+
+class Database:
+    def __init__(self):
+# this db cred
+
+        self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
+                                   DictCursor)
+        self.cur = self.con.cursor()
+
+    def list_users(self):
+        self.cur.execute("SELECT * FROM users LIMIT 1")
+        result = self.cur.fetchall()
+
+        return result
+
+
+@app.route('/a')
+def users():
+    def db_query():
+        db = Database()
+        emps = db.list_users()
+
+        return emps
+
+    res = db_query()
+
+    return render_template('index.html', result=res, content_type='application/json')
+
+
 items = []
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World qw!'
+#
+# @app.route('/')
+# def hello_world():
+#     return 'Hello World qw!'
 
 
 class Item(Resource):
@@ -25,6 +67,7 @@ class Item(Resource):
                         required=True,
                         help="Az árat kötelező meghatározni!"
                         )
+
     # parser.add_argument('valami mező',
     #                     type=float,
     #                     required=True,

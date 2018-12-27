@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users form db</title>
+</head>
+<body>
+
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+
+<table id="users" style="width:100%">
+    {% if result %}
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Password</th>
+    </tr>
+    {% for row in result %}
+    <tr>
+        <td> {{ row.firstname }}</td>
+        <td> {{ row.lastname }}</td>
+        <td> {{ row.gender }}</td>
+        <td> {{ row.email }}</td>
+        <td> {{ row.password }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
+
+</body>
+</html>
